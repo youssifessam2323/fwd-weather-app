@@ -27,6 +27,7 @@ app.listen(PORT, () => {
 
 
 app.get('/api/data', (req,res) => {
+    console.log("app.get(/api/data) is triggered");
     res.send(projectData);
 });
 
