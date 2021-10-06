@@ -8,8 +8,6 @@ const cors = require('cors');
 const app = express();
 
 
-/* Including my weather api client js file */
-const weatherApi = require('./weather');
 
 /* Middleware*/
 //Here we are configuring express to use body-parser as middle-ware.
@@ -32,11 +30,10 @@ app.get('/api/data', (req,res) => {
     res.send(projectData);
 });
 
-app.post('/api/data', (req,res) => { 
+app.post('/api/data', (req,res) => {
+    console.log("data come is " + JSON.stringify(req.body)); 
     projectData = req.body;
+    console.log("Project data after update" + JSON.stringify(projectData)); 
     res.send({message: "data added", status: 200});
 });
 
-app.get("/api/weather", async (req,res) => {
-    res.send(await weatherApi.requestWeatherByZipcode(req.query.zib));
-})
