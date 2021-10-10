@@ -1,6 +1,6 @@
 
 const serverUrl = "http://localhost:8000";
-const apiKey = "&appid=04a35fc35c5c08c17b53830c5b582769";
+const apiKey = "&appid=04a35fc35c5c08c17b53830c5b582769&units=imperial";
 const apiUrl = "http://api.openweathermap.org/data/2.5/weather";
 
 
@@ -49,8 +49,7 @@ const loadLastDataAndUpdateUI = async () => {
 }
 
 const getValues = (dataComeFromAPI) => {
-    const now = Date.now();
-    const date = new Date(now);
+    const date = new Date();
 
     const { temp } = dataComeFromAPI.main;
     const feeling = feelingInput.value;
@@ -85,12 +84,15 @@ submitBtn.addEventListener("click", async e => {
 
     console.log(zipInput.value);
     await getDataByZibCode(zipInput.value)
-        .then(data => {
+        .then(async data => {
             if (data == undefined) {
                 return;
             }
+            console.log("Data after weather API call is " + JSON.stringify(data));
 
-            fetch("http://localhost:8000/api/data", {
+            const {date, temp, feeling } = getValues(data);
+            
+           await fetch("http://localhost:8000/api/data", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,10 +101,11 @@ submitBtn.addEventListener("click", async e => {
             })
                 .then(res => res.json())
                 .then(res => {
+                    console.log("response come from the server is " + JSON.stringify(res));
                     updateTheUI({
-                        temp: res.temp,
-                        date: new Date(),
-                        feeling: feelingInput.value
+                        temp: temp,
+                        date: date,
+                        feeling: feeling
                     });
                 });
 
